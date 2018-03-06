@@ -6,23 +6,10 @@
 
 		public function add($node = NULL, $script = NULL)
 		{
-			$num = func_num_args();
-			if ($num < 3)
-			{
-				$args = array();
-			}
-			else
-			{
-				for ($i = 2; $i < $num; $i++)
-				{
-					$args[] = func_get_args()[$i];
-				}
-			}
 			if (!is_null($node) && !is_null($script))
 			{
 				$this->nodes[$node][] = array(
-					"script" => $script,
-					"args" => $args
+					"script" => $script
 				);
 			}
 			if (is_null($node)) echo ":node_undeclared";
@@ -33,13 +20,25 @@
 		{
 			if (!is_null($node))
 			{
+				$num = func_num_args();
+				if ($num < 2)
+				{
+					$argv = array();
+				}
+				else
+				{
+					for ($i = 1; $i < $num; $i++)
+					{
+						$argv[] = func_get_args()[$i];
+					}
+				}
 				foreach ($this->nodes[$node] as $data)
 				{
-					if (count($data["args"]) > 0)
+					if (count($argv) > 0)
 					{
 						if (function_exists($data["script"]))
 						{
-							foreach ($data["args"] as $arg)
+							foreach ($argv as $arg)
 							{
 								$args[] = "'".$arg."'";
 							}
